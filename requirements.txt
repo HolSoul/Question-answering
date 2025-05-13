@@ -12,3 +12,4 @@ gradio
 pdfplumber
 ipykernel
 python-docx
+nltk

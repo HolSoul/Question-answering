@@ -5,11 +5,15 @@ import pandas as pd
 from typing import List, Tuple
 import pdfplumber
 import os
+import nltk
+from nltk.tokenize import sent_tokenize
 
 try:
     import docx
 except ImportError:
     docx = None
+
+nltk.download('punkt', quiet=True)
 
 def load_raw_texts(path: str) -> List[str]:
     """Загрузка исходных текстов из файла/папки"""
@@ -54,3 +58,13 @@ def extract_text_from_file(file_path: str) -> str:
         return extract_text_from_txt(file_path)
     else:
         raise ValueError(f"Неподдерживаемый формат файла: {ext}")
+
+def split_text_to_sentences(text: str, lang: str = 'russian') -> list:
+    """Разбивает текст на предложения с помощью nltk"""
+    return sent_tokenize(text, language=lang)
+
+def process_file_to_sentences(file_path: str, lang: str = 'russian') -> list:
+    """Извлекает текст из файла и разбивает на предложения"""
+    text = extract_text_from_file(file_path)
+    sentences = split_text_to_sentences(text, lang=lang)
+    return [s.strip() for s in sentences if s.strip()]
